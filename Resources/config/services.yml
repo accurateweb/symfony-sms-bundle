@@ -1,0 +1,11 @@
+parameters:
+  aw_sms.templating.loader.class: Accurateweb\SmsBundle\Template\Loader\GenericTemplateLoader
+
+services:
+  aw_sms.template.loader:
+    class: %aw_sms.templating.loader.class%
+
+  aw_sms.template.factory:
+    class: Accurateweb\SmsBundle\Sms\Factory\SmsFactory
+    arguments:
+      - @aw_sms.template.loader

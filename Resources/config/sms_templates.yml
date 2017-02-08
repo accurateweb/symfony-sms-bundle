@@ -1,0 +1,9 @@
+#aw_sms:
+#  sms_templates:
+#    my_template:
+#      description: My very first template
+#      variables:
+#        foo: { description: Bar}
+#      defaults:
+#        text: |
+#          Dear %foo%, here is your SMS!
