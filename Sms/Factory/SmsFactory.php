@@ -11,7 +11,12 @@
 
 namespace Accurateweb\SmsBundle\Sms\Factory;
 
+use Accurateweb\SmsBundle\Exception\TemplateNotFoundException;
+use Accurateweb\SmsBundle\Model\Sms;
+use Accurateweb\SmsBundle\Template\Engine\TemplateEngineInterface;
 use Accurateweb\SmsBundle\Template\Loader\TemplateLoaderInterface;
+use Accurateweb\SmsBundle\Template\SmsTemplate;
+use Accurateweb\SmsBundle\Template\SmsTemplateInterface;
 
 /**
  * SMS Factory
@@ -25,6 +30,16 @@ class SmsFactory
    */
   private $loader;
 
+  /**
+   * @var TemplateEngineInterface
+   */
+  private $engine;
+
+  /**
+   * Known template list
+   *
+   * @var array
+   */
   private $templates;
 
   /**
@@ -32,28 +47,81 @@ class SmsFactory
    *
    * @param TemplateLoaderInterface $loader
    */
-  public function __construct(TemplateLoaderInterface $loader)
+  public function __construct(TemplateLoaderInterface $loader, TemplateEngineInterface $engine)
   {
     $this->loader = $loader;
+    $this->engine = $engine;
     $this->templates = [];
   }
 
+  /**
+   * Adds a template to the list of known templates.
+   *
+   * If a template with given alias already exists, it will be replaced with a new one with given configuration
+   *
+   * @param string $alias
+   * @param array $configuration
+   */
   public function setTemplate($alias, $configuration)
   {
-    $this->templates[$alias] = $configuration;
+    $this->templates[$alias] = new SmsTemplate($alias, $configuration['description'],
+      $configuration['defaults']['text'], $configuration['variables']);
+  }
+
+  /**
+   * Returns a template for given alias
+   *
+   * @param string $alias Template alias
+   * @return SmsTemplate An SMS Template
+   * @throws TemplateNotFoundException
+   */
+  public function getTemplate($alias)
+  {
+    if (!isset($this->templates[$alias]))
+    {
+      throw new TemplateNotFoundException(sprintf('Sms template "%s" is not registered', $alias));
+    }
+
+    return $this->templates[$alias];
+  }
+
+  /**
+   * Returns a list of all templates
+   *
+   * @return SmsTemplate[]
+   */
+  public function getTemplates()
+  {
+    return $this->templates;
+  }
+
+  /**
+   * Loads a template using the given loader
+   *
+   * @param String $templateName Template alias
+   * @return SmsTemplateInterface Template object
+   */
+  protected function loadTemplate($templateName)
+  {
+    return $this->loader->load($templateName);
   }
 
   /**
    * Creates an SMS for given template name and variable values
    *
-   * @param String $templateName Template name
+   * @param SmsTemplateInterface|String $templateName Template instance or template name
    * @param array $values Variable values
    * @return Sms SMS object
    */
-  public function createSms($templateName, $values=[])
+  public function createSms($template, $values=[])
   {
-    $template = $this->loader->load($templateName);
+    if (!$template instanceof SmsTemplateInterface)
+    {
+      $template = $this->getTemplate($template);
 
-    return new Sms($template->renderText($values));
+      $this->loadTemplate($template);
+    }
+
+    return new Sms($this->engine->render($template->getText(), $values));
   }
 }

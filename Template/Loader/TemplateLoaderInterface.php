@@ -9,11 +9,17 @@ namespace Accurateweb\SmsBundle\Template\Loader;
 
 use Accurateweb\SmsBundle\Template\SmsTemplateInterface;
 
+/**
+ * Interface TemplateLoaderInterface
+ *
+ * @package Accurateweb\SmsBundle\Template\Loader
+ */
 interface TemplateLoaderInterface
 {
   /**
-   * @param $templateName
-   * @return SmsTemplateInterface
+   * Loads actual template text values from template source
+   *
+   * @param SmsTemplateInterface $template
    */
-  public function load($templateName);
+  public function load(SmsTemplateInterface $template);
 }

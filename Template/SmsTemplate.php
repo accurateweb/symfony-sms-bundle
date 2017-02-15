@@ -21,7 +21,7 @@ class SmsTemplate implements SmsTemplateInterface
   function __construct($alias, $description, $textTemplate, $variables = array())
   {
     $this->alias = $alias;
-    $this->description = '';
+    $this->description = $description;
     $this->textTemplate = $textTemplate;
     $this->variables = $variables;
   }
@@ -31,12 +31,12 @@ class SmsTemplate implements SmsTemplateInterface
     return $this->alias;
   }
 
-  public function getTextTemplate()
+  public function getText()
   {
     return $this->textTemplate;
   }
 
-  public function setTextTemplate($v)
+  public function setText($v)
   {
     $this->textTemplate = $v;
   }
@@ -61,19 +61,8 @@ class SmsTemplate implements SmsTemplateInterface
     $this->description = $description;
   }
 
-  protected function parse($template, $values)
+  public function getSupportedVariables()
   {
-    $replacements = array();
-    foreach ($values as $variable => $value)
-    {
-      $replacements['%'.$variable.'%'] = $value;
-    }
-
-    return strtr($template, $replacements);
-  }
-
-  public function renderText(array $variables = [])
-  {
-
+    return $this->getVariables();
   }
 }

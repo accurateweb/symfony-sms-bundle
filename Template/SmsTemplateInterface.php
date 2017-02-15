@@ -14,11 +14,22 @@ namespace Accurateweb\SmsBundle\Template;
 
 interface SmsTemplateInterface
 {
+  public function getDescription();
+
+  public function getSupportedVariables();
+
   /**
-   * Renders an SMS message text
+   * Returns SMS message text template
    *
    * @param array $variables
    * @return string
    */
-  public function renderText(array $variables=[]);
+  public function getText();
+
+  /**
+   * Set SMS message text template
+   *
+   * @param string $text
+   */
+  public function setText($text);
 }

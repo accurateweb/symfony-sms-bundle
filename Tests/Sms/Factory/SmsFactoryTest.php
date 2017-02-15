@@ -11,6 +11,9 @@
 class SmsFactoryTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
   private static $container,
+                /**
+                 * @var \Accurateweb\SmsBundle\Sms\Factory\SmsFactory
+                 */
                  $smsFactory;
 
   public static function setUpBeforeClass()
@@ -29,6 +32,8 @@ class SmsFactoryTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
   public function testCreateSms()
   {
-    var_dump(self::$smsFactory);die;
+    $sms = self::$smsFactory->createSms('foo', ['bar' => 'baz']);
+
+    $this->assertNotNull($sms);
   }
 }

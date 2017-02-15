@@ -14,11 +14,13 @@ namespace Accurateweb\SmsBundle\Template\Loader;
 
 use Accurateweb\SmsBundle\Template\SmsTemplateInterface;
 
-class GenericTemplateLoader implements TemplateLoaderInterface
+class DefaultTemplateLoader implements TemplateLoaderInterface
 {
-
-  public function load($templateName)
+  /**
+   * @param SmsTemplateInterface $template
+   */
+  public function load(SmsTemplateInterface $template)
   {
-    // TODO: Implement load() method.
+    //This preserves the default values, so nothing to do.
   }
 }
