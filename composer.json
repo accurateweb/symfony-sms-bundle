@@ -1,0 +1,9 @@
+{
+  "name": "accurateweb/sms-bundle",
+  "version": "dev-master",
+  "autoload": {
+    "psr-4" : {
+      "Accurateweb\\SmsBundle" : ""
+    }
+  }
+}
